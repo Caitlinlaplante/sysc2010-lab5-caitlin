@@ -19,12 +19,12 @@ class Numbers:
         '''Add to the sum'''
         self.sum += number
 
-    #4.3
+    #4.2
     def subtractFromSum(self, number) -> None:
         '''Remove from the sum'''
         self.sum -= number
 
-    #4.4
+    #4.3
     def stringOfNumber(self, number) -> str:
         numbers = ["zero","one","two","three","four","five","six","seven","eight","nine"]
         if not isinstance(number, int):
@@ -77,11 +77,9 @@ class ECG:
         '''
         This function return the total number of peaks
         '''
-        peaks = 0
+        peaks = self.detect_peaks(signal, threshold)
 
-        #Your Code Here
-
-        return peaks
+        return len(peaks)
 
     #6.2
     def rr_intervals(self, peaks, fs):
@@ -94,8 +92,9 @@ class ECG:
         Returns a list of RR intervals in seconds
         '''
         intervals = []
-
-        #Your Code Here
+        for i in range(1, len(peaks)):
+            interval = (peaks[i]-peaks[i-1])/fs
+            intervals.append(interval)
 
         return intervals
     
@@ -109,6 +108,14 @@ class ECG:
 
         Returns a boolean, True (1) if a proper signal, False (0) otherwise
         '''
+        if len(signal) == 0:
+            raise ValueError("Signal cannot be empty")
+        for value in signal:
+            if type(value) != float and type(value) != int:
+                return False
+            
+        return True
+
 
     #7
     def heart_rate(self, peaks, fs):
@@ -118,8 +125,14 @@ class ECG:
         
         This function should return the heart rate in (BPM)
         '''
-        heartRate = 0
-
-        #Your Code Here
-
+        if self.is_signal_valid(peaks) == False:
+            raise ValueError("Invalid signal")
+        
+        if len(peaks) <2:
+            raise ValueError("Need more peaks to calculate Heart Rate")
+            
+        rr = self.rr_intervals(peaks, fs)
+        avg_rr = sum(rr)/len(rr)
+        heartRate = 60/avg_rr
+        
         return heartRate
