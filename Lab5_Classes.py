@@ -128,7 +128,7 @@ class ECG:
         if self.is_signal_valid(peaks) == False:
             raise ValueError("Invalid signal")
         
-        if len(peaks) <2:
+        if len(peaks) < 2:
             raise ValueError("Need more peaks to calculate Heart Rate")
             
         rr = self.rr_intervals(peaks, fs)
